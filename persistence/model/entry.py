@@ -1,7 +1,6 @@
 import datetime
 from typing import List
 
-from comment import Comment
 from alchemical import Model
 from sqlalchemy import Integer, Text, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -14,11 +13,14 @@ class Entry(Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     day: Mapped[Date] = mapped_column(Date, default=datetime.datetime.today(), nullable=False)
     comments: Mapped[List["Comment"]] = relationship(
-        back_populates="parent", cascade="all, delete", passive_deletes=True
+        back_populates="entry", cascade="all, delete", passive_deletes=True
     )
 
     def form_update(self, form):
         self.description = form.description.data.strip()
 
     def __repr__(self):
-        return f'<Entry {self.id}>'
+        return f'<Entry {self.description}>'
+
+
+from persistence.model.comment import Comment

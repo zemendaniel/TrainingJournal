@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Entries{% endblock %}
+
+{% block heading %}Entries{% endblock %}
+
+{% block main %}
+
+{% for entry in entries %}
+    <h2>
+        {{ entry.day }}
+    </h2>
+
+    <a href="{{url_for("entries.view", entry_id=entry.id)}}">View</a>
+    <a href="{{ url_for("entries.edit", entry_id=entry.id) }}">Edit</a>
+
+    <form method="post" action="{{ url_for('entries.delete', entry_id=entry.id) }}">
+        <button type="submit" onclick="return confirm('Delete entry?')">
+            Delete
+        </button>
+    </form>
+
+    <p>
+        {{ entry.description }}
+    </p>
+    <hr>
+
+{% endfor %}
+
+{% endblock %}

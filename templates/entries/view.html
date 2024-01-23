@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}View entry{% endblock %}
+
+{% block heading %}View entry{% endblock %}
+
+{% block main %}
+
+    <a href="{{ url_for('entries.list_all') }}">Close</a>
+
+    <h2>
+        {{ entry.day }}
+    </h2>
+
+    <p>
+        {{ entry.description }}
+    </p>
+    <br>
+    <hr>
+    <form method="post">
+        {{ form.csrf_token }}
+
+            {{ form.username.label }}
+            {{ form.username }}
+            {% if form.username.errors %}
+                <ul>
+                {% for error in form.username.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {{ comment_form.content.label }}
+            {{ comment_form.content }}
+            {% if comment_form.content.errors %}
+                <ul>
+                    {% for error in comment_form.content.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {{ form.submit }}
+    </form>
+
+    {% for comment in entries.comments %}
+        <h3>{{ comment.username }}</h3>
+         <p>{{ comment.content }}</p>
+    {% endfor %}
+
+
+{% endblock %}

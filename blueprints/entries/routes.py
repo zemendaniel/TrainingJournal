@@ -1,7 +1,10 @@
 from flask import request, render_template, abort, flash, redirect, url_for
 
+from persistence.model.comment import Comment
 from blueprints.entries import bp
 from blueprints.entries.forms import CreateEntryForm, EditEntryForm
+from blueprints.comments.forms import CreateCommentForm
+from persistence.repository.comment import CommentRepository
 from persistence.model.entry import Entry
 from persistence.repository.entry import EntryRepository
 
@@ -13,65 +16,75 @@ def list_all():
     else:
         entries = EntryRepository.find_all()
 
-    return render_template('recipes/list.html', entries=entries)
+    return render_template('entries/list.html', entries=entries)
 
 
-@bp.route('/view/<int:recipe_id>')
-def view(recipe_id):
-    recipe = RecipeRepository.find_by_id(recipe_id) or abort(404)
+@bp.route('/view/<int:entry_id>', methods=('GET', 'POST'))
+def view(entry_id):
+    entry = EntryRepository.find_by_id(entry_id) or abort(404)
+    comment = Comment()
+    comment_form = CreateCommentForm()
 
-    return render_template('recipes/view.html', recipe=recipe)
+    if comment_form.validate_on_submit():
+        comment.form_update(comment_form)
+
+        try:
+            CommentRepository.save(comment)
+            flash("Comment created.")
+
+        except Exception as err:
+            flash(str(err))
+
+    return render_template('entries/view.html', entry=entry)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
-@has_admin_role
 def create():
-    recipe = Recipe()
-    form = CreateRecipeForm()
+    entry = Entry()
+    form = CreateEntryForm()
 
     if form.validate_on_submit():
-        recipe.form_update(form)
+        entry.form_update(form)
 
         try:
-            RecipeRepository.save(recipe)
-            flash('Recipe created.')
+            EntryRepository.save(entry)
+            flash('Entry created.')
 
-            return redirect(url_for('recipes.list_all'))
+            return redirect(url_for('entries.list_all'))
         except Exception as err:
             flash(str(err))
 
-    return render_template('recipes/form.html', form=form, create=True)
+    return render_template('entries/form.html', form=form, create=True)
 
 
-@bp.route('/edit/<int:recipe_id>', methods=('GET', 'POST'))
-@has_admin_role
-def edit(recipe_id):
-    recipe = RecipeRepository.find_by_id(recipe_id) or abort(404)
-    form = EditRecipeForm(obj=recipe)
+@bp.route('/edit/<int:entry_id>', methods=('GET', 'POST'))
+def edit(entry_id):
+    entry = EntryRepository.find_by_id(entry_id) or abort(404)
+    form = EditEntryForm(obj=entry)
 
     if form.validate_on_submit():
-        recipe.form_update(form)
+        entry.form_update(form)
 
         try:
-            RecipeRepository.save(recipe)
-            flash('Recipe saved.')
+            EntryRepository.save(entry)
+            flash('Entry saved.')
 
-            return redirect(url_for('recipes.edit', recipe_id=recipe.id))
+            return redirect(url_for('entries.edit', entry_id=entry.id))
         except Exception as err:
             flash(str(err))
 
-    return render_template('recipes/form.html', form=form)
+    return render_template('entries/form.html', form=form)
 
 
-@bp.route('/delete/<int:recipe_id>', methods=('POST',))
-@has_admin_role
-def delete(recipe_id):
-    recipe = RecipeRepository.find_by_id(recipe_id) or abort(404)
+@bp.route('/delete/<int:entry_id>', methods=('POST',))
+def delete(entry_id):
+    entry = EntryRepository.find_by_id(entry_id) or abort(404)
 
     try:
-        RecipeRepository.delete(recipe)
-        flash('Recipe deleted.')
+        EntryRepository.delete(entry)
+        flash('Entry deleted.')
     except Exception as err:
         flash(str(err))
 
-    return redirect(url_for('recipes.list_all'))
+    return redirect(url_for('entries.list_all'))
+

@@ -1,7 +1,5 @@
 from flask import g
 
-from persistence.model.entry import Entry
-
 
 class EntryRepository:
     @staticmethod
@@ -45,4 +43,6 @@ class EntryRepository:
     def delete(entry):
         g.session.delete(entry)
         g.session.commit()
-        
+
+
+from persistence.model.entry import Entry

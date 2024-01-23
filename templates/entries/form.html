@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Create / edit entry{% endblock %}
+
+{% block heading %}Create / edit entry{% endblock %}
+
+{% block main %}
+<a href="{{ url_for('entries.list_all') }}">Close</a>
+
+<form method="post">
+        {{ form.csrf_token }}
+
+            {{ form.description.label }}
+            {{ form.description }}
+            {% if form.description.errors %}
+                <ul>
+                    {% for error in form.category.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {{ form.submit(onclick='return confirm("' + ('Create' if create else 'Save') + ' entry?")') }}
+    </form>
+
+{% endblock %}

@@ -1,7 +1,5 @@
 from flask import g
 
-from persistence.model.comment import Comment
-
 
 class CommentRepository:
     @staticmethod
