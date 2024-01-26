@@ -35,7 +35,7 @@ def view(entry_id):
         except Exception as err:
             flash(str(err))
 
-    return render_template('entries/view.html', entry=entry)
+    return render_template('entries/view.html', entry=entry, comment_form=comment_form)
 
 
 @bp.route('/create', methods=('GET', 'POST'))

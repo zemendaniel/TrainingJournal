@@ -16,7 +16,8 @@ class Comment(Model):
 
     datetime: Mapped[DateTime] = mapped_column(
             DateTime, nullable=False,
-            default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            default=datetime.now())
+            # .strftime("%Y-%m-%d %H:%M:%S"))
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
