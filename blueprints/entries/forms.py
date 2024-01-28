@@ -11,3 +11,5 @@ class CreateEntryForm(FlaskForm):
 class EditEntryForm(FlaskForm):
     description = TextAreaField('Description', validators=[DataRequired(), length(1, -1)])
     submit = SubmitField('Save')
+
+

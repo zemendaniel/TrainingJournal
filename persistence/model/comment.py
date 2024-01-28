@@ -22,6 +22,7 @@ class Comment(Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
     def form_update(self, form):
+        self.username = form.username.data.strip()
         self.content = form.content.data.strip()
 
     def __repr__(self):

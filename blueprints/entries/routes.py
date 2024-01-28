@@ -22,13 +22,16 @@ def list_all():
 @bp.route('/view/<int:entry_id>', methods=('GET', 'POST'))
 def view(entry_id):
     entry = EntryRepository.find_by_id(entry_id) or abort(404)
-    comment = Comment()
     comment_form = CreateCommentForm()
+    #comment_form.entry_id.data = entry_id
 
     if comment_form.validate_on_submit():
+        comment = Comment()
+        comment.entry_id = entry_id
         comment.form_update(comment_form)
 
         try:
+            comment_form.process()
             CommentRepository.save(comment)
             flash("Comment created.")
 
