@@ -14,7 +14,7 @@ class Entry(Model):
     day: Mapped[Date] = mapped_column(Date, default=datetime.datetime.today(), nullable=False)
     comments: Mapped[List["Comment"]] = relationship(
         back_populates="entry", cascade="all, delete", passive_deletes=True
-    )
+    ) # TODO: kérdés, itt reversben?
 
     def form_update(self, form):
         self.description = form.description.data.strip()

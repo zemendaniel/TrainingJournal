@@ -43,7 +43,7 @@
             {{ comment_form.submit }}
     </form>
 
-    {% for comment in entry.comments %}
+    {% for comment in entry.comments[::-1] %}
         <h3>{{ comment.username }}</h3>
          <p>{{ comment.content }}</p>
     {% endfor %}

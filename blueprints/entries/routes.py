@@ -3,7 +3,7 @@ from flask import request, render_template, abort, flash, redirect, url_for
 from persistence.model.comment import Comment
 from blueprints.entries import bp
 from blueprints.entries.forms import CreateEntryForm, EditEntryForm
-from blueprints.comments.forms import CreateCommentForm
+from blueprints.entries.forms import CreateCommentForm
 from persistence.repository.comment import CommentRepository
 from persistence.model.entry import Entry
 from persistence.repository.entry import EntryRepository
@@ -23,11 +23,10 @@ def list_all():
 def view(entry_id):
     entry = EntryRepository.find_by_id(entry_id) or abort(404)
     comment_form = CreateCommentForm()
-    #comment_form.entry_id.data = entry_id
 
     if comment_form.validate_on_submit():
         comment = Comment()
-        comment.entry_id = entry_id
+        comment.entry_id = entry_id # TODO kérdés, ez így jó?
         comment.form_update(comment_form)
 
         try:
